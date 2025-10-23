@@ -1,0 +1,60 @@
+const pool = require("../config/pool");
+
+// TODO: try/catch?
+
+// Users
+
+async function insertUser(
+  username,
+  firstName,
+  lastName,
+  passwordHash,
+  membership,
+  admin
+) {
+  await pool.query(
+    `
+    INSERT INTO users (username, first_name, last_name, password, membership, admin)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    `,
+    [username, firstName, lastName, passwordHash, membership, admin]
+  );
+}
+
+// Messages
+
+async function insertMessage(title, content, userId) {
+  const timestamp = new Date();
+  await pool.query(
+    "INSERT INTO messages (title, content, timestamp, user_id) VALUES ($1, $2, $3, $4)",
+    [title, content, timestamp, userId]
+  );
+  return;
+}
+
+async function deleteMessage(messageId) {
+  await pool.query("DELETE FROM messages WHERE id = $1", [messageId]);
+  return;
+}
+
+async function getMessages() {
+  const { rows } = await pool.query("SELECT * FROM messages");
+  const messages = rows.map((row) => {
+    const { user_id: userId, ...rest } = row;
+    return {
+      ...rest,
+      userId,
+    };
+  });
+  return messages;
+}
+
+// Exports
+
+module.exports = {
+  insertUser,
+
+  insertMessage,
+  deleteMessage,
+  getMessages,
+};

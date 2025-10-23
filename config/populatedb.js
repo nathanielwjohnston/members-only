@@ -8,7 +8,7 @@ const SQL = `
         first_name VARCHAR ( 35 ),
         last_name VARCHAR ( 35 ),
         password CHAR ( 60 ),
-        membership_status BOOLEAN,
+        membership BOOLEAN,
         admin BOOLEAN
     );
 
@@ -16,7 +16,7 @@ const SQL = `
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         title VARCHAR ( 255 ),
         content VARCHAR ( 500 ),
-        timestamp TIMESTAMPTZ,
+        timestamp TIMESTAMP,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
     );
 `;
