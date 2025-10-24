@@ -13,8 +13,8 @@ router.post("/login", controller.loginPost);
 router.get("/join-club", controller.joinClubGet);
 router.post("/join-club", controller.joinClubPost);
 
-router.get("/createMessage", controller.createMessageGet);
-router.post("/createMessage", controller.createMessagePost);
+router.get("/create-message", controller.createMessageGet);
+router.post("/create-message", controller.createMessagePost);
 
 router.post("/:id/delete", controller.deleteMessage);
 
