@@ -10,12 +10,9 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
-const db = require("./db/queries.js");
+const router = require("./routes/router");
 
-// TODO: temporary
-app.get("/", (req, res, next) => {
-  res.send("Temporary page");
-});
+app.use("/", router);
 
 // TODO: error handling
 
