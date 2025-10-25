@@ -1,0 +1,46 @@
+<%- include("partials/formErrors.ejs") %>
+<form action="/register" method="post">
+  <label for="firstName">First name:</label>
+  <input
+    type="text"
+    name="firstName"
+    id="firstName"
+    value="<%= locals.values.firstName %>"
+  />
+
+  <label for="lastName">Last name:</label>
+  <input
+    type="text"
+    name="lastName"
+    id="lastName"
+    value="<%= locals.values.lastName %>"
+  />
+
+  <label for="username">Username:</label>
+  <input type="text" name="username" value="<%= locals.values.username %>" />
+
+  <label for="password">Password:</label>
+  <input
+    type="text"
+    name="password"
+    id="password"
+    value="<%= locals.values.password %>"
+  />
+
+  <label for="passwordConfirm">Confirm password:</label>
+  <input
+    type="text"
+    name="passwordConfirm"
+    id="passwordConfirm"
+    value="<%= locals.values.passwordConfirm %>"
+  />
+
+  <label for="adminCheck">Are you an admin?</label>
+  <% if (locals.values.adminCheck === "on") { %>
+  <input type="checkbox" name="adminCheck" id="adminCheck" checked />
+  <% } else {%>
+  <input type="checkbox" name="adminCheck" id="adminCheck" />
+  <% } %>
+
+  <button type="submit">Register</button>
+</form>

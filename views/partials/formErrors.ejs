@@ -1,0 +1,10 @@
+<% if (errors.length > 0) {%>
+<div class="form-error-container">
+  <ul class="form-error-list">
+    <h2>You have issues with your input</h2>
+    <% errors.forEach(function(error) { %>
+    <li class="form-error"><%= error.msg %></li>
+    <% }); %>
+  </ul>
+</div>
+<% } %>
