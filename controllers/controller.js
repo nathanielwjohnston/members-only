@@ -4,7 +4,16 @@ const { body, validationResult } = require("express-validator");
 const db = require("../db/queries");
 const pwManager = require("../lib/passwordUtils");
 
-async function homeGet(req, res) {}
+async function homeGet(req, res) {
+  const messages = db.getMessages();
+
+  // TODO: filter messages dependent on user status
+
+  res.render("template", {
+    page: "messages",
+    title: "Messages",
+  });
+}
 async function registerGet(req, res) {
   res.locals.errors = [];
   res.render("template", {
