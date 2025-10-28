@@ -177,8 +177,44 @@ async function joinClubPost(req, res) {
   await db.upgradeToMember(req.user.id);
   res.redirect("/");
 }
-async function createMessageGet(req, res) {}
-async function createMessagePost(req, res) {}
+async function createMessageGet(req, res) {
+  res.render("template", {
+    page: "createMessageForm",
+    title: "Create message",
+  });
+}
+
+const validateMessage = [
+  body("title")
+    .trim()
+    .notEmpty()
+    .withMessage(`Title ${emptyErr}`)
+    .isLength({ max: 255 })
+    .withMessage(`Title must be no more than 255 characters `),
+  body("content")
+    .trim()
+    .notEmpty()
+    .withMessage(`Content ${emptyErr}`)
+    .isLength({ max: 500 })
+    .withMessage(`Content must be no more than 500 characters `),
+];
+
+async function createMessagePost(req, res) {
+  const { title, content } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.locals.errors = errors.array();
+    res.locals.values = { title, content };
+    return res.status(400).render("template", {
+      page: "createMessageForm",
+      title: "Create message",
+    });
+  }
+
+  await db.insertMessage(title, content, req.user.id);
+  res.redirect("/");
+}
 async function deleteMessage(req, res) {}
 
 module.exports = {
@@ -190,6 +226,6 @@ module.exports = {
   joinClubGet,
   joinClubPost: [validatePasscode, joinClubPost],
   createMessageGet,
-  createMessagePost,
+  createMessagePost: [validateMessage, createMessagePost],
   deleteMessage,
 };

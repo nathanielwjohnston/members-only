@@ -21,7 +21,7 @@ router.post("/login", controller.loginPost);
 router.get("/join-club", isAuthenticated, controller.joinClubGet);
 router.post("/join-club", controller.joinClubPost);
 
-router.get("/create-message", controller.createMessageGet);
+router.get("/create-message", isAuthenticated, controller.createMessageGet);
 router.post("/create-message", controller.createMessagePost);
 
 router.post("/:id/delete", controller.deleteMessage);

@@ -1,0 +1,22 @@
+<%- include("partials/formErrors.ejs") %>
+<form action="/create-message" method="post">
+  <label for="title">Title</label>
+  <input
+    type="text"
+    name="title"
+    id="title"
+    maxlength="255"
+    value="<%= locals.values.title %>"
+  />
+
+  <label for="content">Content</label>
+  <input
+    type="text"
+    name="content"
+    id="content"
+    maxlength="500"
+    value="<%= locals.values.content %>"
+  />
+
+  <button type="submit">Post Message</button>
+</form>
