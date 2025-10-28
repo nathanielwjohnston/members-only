@@ -1,11 +1,15 @@
 // TODO: Use LOCALS!
+// TODO: Split validation out and sort out passport.authenticate
 
 const { body, validationResult } = require("express-validator");
 const db = require("../db/queries");
 const pwManager = require("../lib/passwordUtils");
+const passport = require("passport");
 
 async function homeGet(req, res) {
   const messages = db.getMessages();
+
+  if (req.isAuthenticated()) console.log("I'm authenticated");
 
   // TODO: filter messages dependent on user status
 
@@ -15,7 +19,6 @@ async function homeGet(req, res) {
   });
 }
 async function registerGet(req, res) {
-  res.locals.errors = [];
   res.render("template", {
     page: "registerForm",
     title: "Register",
@@ -107,8 +110,36 @@ async function registerPost(req, res) {
 
   res.redirect("/");
 }
-async function loginGet(req, res) {}
-async function loginPost(req, res) {}
+async function loginGet(req, res) {
+  res.render("template", {
+    page: "loginForm",
+    title: "login",
+  });
+}
+
+const validateLogin = [
+  body("username").trim().notEmpty().withMessage(`Username ${emptyErr}`),
+  body("password").trim().notEmpty().withMessage(`Password ${emptyErr}`),
+];
+
+async function loginPost(req, res, next) {
+  const { username, password } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.locals.errors = errors.array();
+    res.locals.values = { username, password };
+    return res.status(400).render("template", {
+      page: "loginForm",
+      title: "Login",
+    });
+  }
+
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+  })(req, res, next);
+}
 async function joinClubGet(req, res) {}
 async function joinClubPost(req, res) {}
 async function createMessageGet(req, res) {}
@@ -120,7 +151,7 @@ module.exports = {
   registerGet,
   registerPost: [validateUser, registerPost],
   loginGet,
-  loginPost,
+  loginPost: [validateLogin, loginPost],
   joinClubGet,
   joinClubPost,
   createMessageGet,
