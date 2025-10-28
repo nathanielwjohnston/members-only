@@ -29,7 +29,7 @@ passport.serializeUser((user, done) => {
 // Takes the user from the database via the reference in the session (as above)
 passport.deserializeUser(async (userId, done) => {
   try {
-    const user = db.getUser(userId);
+    const user = await db.getUser(userId);
     done(null, user);
   } catch (error) {
     done(error);

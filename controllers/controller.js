@@ -7,11 +7,11 @@ const pwManager = require("../lib/passwordUtils");
 const passport = require("passport");
 
 async function homeGet(req, res) {
-  const messages = db.getMessages();
-
-  if (req.isAuthenticated()) console.log("I'm authenticated");
+  const messages = await db.getMessages();
 
   // TODO: filter messages dependent on user status
+
+  console.log(req.user);
 
   res.render("template", {
     page: "messages",
@@ -140,8 +140,43 @@ async function loginPost(req, res, next) {
     failureRedirect: "/login",
   })(req, res, next);
 }
-async function joinClubGet(req, res) {}
-async function joinClubPost(req, res) {}
+
+async function joinClubGet(req, res) {
+  if (req.user.membership) {
+    res.send("You are already a member");
+  } else {
+    res.render("template", { page: "joinClubForm", title: "Join club" });
+  }
+}
+
+const validatePasscode = [
+  body("passcode").trim().notEmpty().withMessage(`Passcode ${emptyErr}`),
+];
+
+async function joinClubPost(req, res) {
+  const errors = validationResult(req);
+
+  let passcodeCheck = false;
+
+  const { passcode } = req.body;
+  if (passcode !== process.env.PASSCODE) {
+    res.locals.errors.push({ msg: "Incorrect passcode" });
+  } else {
+    passcodeCheck = true;
+  }
+
+  if (!errors.isEmpty() || !passcodeCheck) {
+    for (let error of errors.array()) {
+      res.locals.errors.push(error);
+    }
+    return res
+      .status(400)
+      .render("template", { page: "joinClubForm", title: "Join club" });
+  }
+
+  await db.upgradeToMember(req.user.id);
+  res.redirect("/");
+}
 async function createMessageGet(req, res) {}
 async function createMessagePost(req, res) {}
 async function deleteMessage(req, res) {}
@@ -153,7 +188,7 @@ module.exports = {
   loginGet,
   loginPost: [validateLogin, loginPost],
   joinClubGet,
-  joinClubPost,
+  joinClubPost: [validatePasscode, joinClubPost],
   createMessageGet,
   createMessagePost,
   deleteMessage,

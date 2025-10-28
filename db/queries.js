@@ -28,12 +28,15 @@ async function getUser(id) {
 }
 
 async function getUserByName(username) {
-  const { rows } = await pool.query(
-    "SELECT * FROM users WHERE username = $1",
-    [username]
-  );
+  const { rows } = await pool.query("SELECT * FROM users WHERE username = $1", [
+    username,
+  ]);
   const user = rows[0];
   return user;
+}
+
+async function upgradeToMember(id) {
+  await pool.query("UPDATE users SET membership = TRUE WHERE id = $1", [id]);
 }
 
 // Messages
@@ -70,6 +73,7 @@ module.exports = {
   insertUser,
   getUser,
   getUserByName,
+  upgradeToMember,
 
   insertMessage,
   deleteMessage,
