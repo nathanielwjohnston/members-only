@@ -212,6 +212,13 @@ async function createMessagePost(req, res) {
 }
 async function deleteMessage(req, res) {}
 
+async function logout(req, res, next) {
+  req.logout(function (error) {
+    if (error) return next(error);
+    res.redirect("/");
+  });
+}
+
 module.exports = {
   homeGet,
   registerGet,
@@ -223,4 +230,5 @@ module.exports = {
   createMessageGet,
   createMessagePost: [validateMessage, createMessagePost],
   deleteMessage,
+  logout,
 };
