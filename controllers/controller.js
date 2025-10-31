@@ -6,7 +6,7 @@ const passport = require("passport");
 async function homeGet(req, res) {
   const messages = await db.getMessages();
 
-  // TODO: filter messages dependent on user status
+  res.locals.messages = messages;
 
   res.render("template", {
     page: "messages",
@@ -210,7 +210,11 @@ async function createMessagePost(req, res) {
   await db.insertMessage(title, content, req.user.id);
   res.redirect("/");
 }
-async function deleteMessage(req, res) {}
+async function deleteMessage(req, res) {
+  const { id } = req.params;
+  await db.deleteMessage(id);
+  res.redirect("/");
+}
 
 async function logout(req, res, next) {
   req.logout(function (error) {

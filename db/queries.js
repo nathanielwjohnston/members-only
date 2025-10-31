@@ -57,13 +57,17 @@ async function deleteMessage(messageId) {
 
 async function getMessages() {
   const { rows } = await pool.query("SELECT * FROM messages");
-  const messages = rows.map((row) => {
-    const { user_id: userId, ...rest } = row;
-    return {
-      ...rest,
-      userId,
-    };
-  });
+  const messages = await Promise.all(
+    rows.map(async (row) => {
+      const { user_id: userId, ...rest } = row;
+      const user = await getUser(userId);
+      return {
+        ...rest,
+        user,
+      };
+    })
+  );
+
   return messages;
 }
 

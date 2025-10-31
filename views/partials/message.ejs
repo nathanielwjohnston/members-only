@@ -1,0 +1,11 @@
+<div>
+  <h2><%= message.title %></h2>
+  <p><%= message.content %></p>
+  <% if (locals.user && locals.user.membership) { %>
+  <span>By <%= message.user.username %> on <%= message.timestamp %></span>
+  <% } %> <% if (locals.user && locals.user.admin) { %>
+  <form action="/<%= message.id %>/delete" method="post">
+    <button type="submit">Delete</button>
+  </form>
+  <% } %>
+</div>
