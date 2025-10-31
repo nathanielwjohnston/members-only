@@ -1,6 +1,3 @@
-// TODO: Use LOCALS!
-// TODO: Split validation out and sort out passport.authenticate
-
 const { body, validationResult } = require("express-validator");
 const db = require("../db/queries");
 const pwManager = require("../lib/passwordUtils");
@@ -10,8 +7,6 @@ async function homeGet(req, res) {
   const messages = await db.getMessages();
 
   // TODO: filter messages dependent on user status
-
-  console.log(req.user);
 
   res.render("template", {
     page: "messages",

@@ -37,6 +37,11 @@ app.use(passport.session());
 
 // Locals default middleware
 app.use((req, res, next) => {
+  console.log(req.user);
+  if (req.user) {
+    const { password, ...user } = req.user;
+    res.locals.user = user;
+  }
   res.locals.values = {};
   res.locals.errors = [];
   next();

@@ -1,7 +1,11 @@
 <nav>
   <a href="/">Messages</a>
   <a href="/register">Register</a>
-  <a href="/login">Log in</a>
+  <% if (locals.user) { %>
   <a href="/create-message">Create Message</a>
   <a href="/join-club">Join Club</a>
+  <a href="/logout">Log out</a>
+  <% } else { %>
+  <a href="/login">Log in</a>
+  <% } %>
 </nav>
