@@ -10,5 +10,7 @@
   <a href="/logout">Log out</a>
   <% } else { %>
   <a href="/login">Log in</a>
-  <% } %>
+  <% } %> <% if (locals.user) { %> <%= locals.user.username %> <% if
+  (locals.user.admin) { %> admin <% } else if (locals.user.membership) { %>
+  member <% } %> <% } %>
 </nav>
